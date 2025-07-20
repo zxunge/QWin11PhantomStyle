@@ -19,7 +19,7 @@ namespace Tweak {
 //
 // The constant C string is provided for convenience, but you may also just use
 // a string literal in your own code, if you prefer.
-extern const char* const menubar_no_ruler;
+extern const char *const menubar_no_ruler;
 
 } // namespace Tweak
 } // namespace QWin11Phantom

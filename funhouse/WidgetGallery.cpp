@@ -55,86 +55,86 @@
 #include <QtWidgets>
 
 //! [0]
-WidgetGallery::WidgetGallery(QWidget* parent) : QWidget(parent) {
-  originalPalette = QApplication::palette();
+WidgetGallery::WidgetGallery(QWidget *parent) : QWidget(parent)
+{
+    originalPalette = QApplication::palette();
 
-  styleComboBox = new QComboBox;
-  styleComboBox->addItem("Phantom");
-  styleComboBox->addItems(QStyleFactory::keys());
-  styleComboBox->addItem("Common");
-  // custom font useful for testing font issues in combo box
-  // styleComboBox->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    styleComboBox = new QComboBox;
+    styleComboBox->addItem("Phantom");
+    styleComboBox->addItems(QStyleFactory::keys());
+    styleComboBox->addItem("Common");
+    // custom font useful for testing font issues in combo box
+    // styleComboBox->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-  styleLabel = new QLabel(tr("Style:"));
-  styleLabel->setBuddy(styleComboBox);
+    styleLabel = new QLabel(tr("Style:"));
+    styleLabel->setBuddy(styleComboBox);
 
-  useStylePaletteCheckBox = new QCheckBox(tr("Use style's standard palette"));
-  useStylePaletteCheckBox->setChecked(false);
+    useStylePaletteCheckBox = new QCheckBox(tr("Use style's standard palette"));
+    useStylePaletteCheckBox->setChecked(false);
 
-  disableWidgetsCheckBox = new QCheckBox(tr("Disable widgets"));
+    disableWidgetsCheckBox = new QCheckBox(tr("Disable widgets"));
 
-  createTopLeftGroupBox();
-  createTopRightGroupBox();
-  createBottomLeftTabWidget();
-  createBottomRightGroupBox();
-  createProgressBar();
-  //! [0]
+    createTopLeftGroupBox();
+    createTopRightGroupBox();
+    createBottomLeftTabWidget();
+    createBottomRightGroupBox();
+    createProgressBar();
+    //! [0]
 
-  //! [1]
-  connect(styleComboBox, SIGNAL(activated(QString)),
-          //! [1] //! [2]
-          this, SLOT(changeStyle(QString)));
-  connect(useStylePaletteCheckBox, SIGNAL(toggled(bool)), this,
-          SLOT(changePalette()));
-  connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), topLeftGroupBox,
-          SLOT(setDisabled(bool)));
-  connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), topRightGroupBox,
-          SLOT(setDisabled(bool)));
-  connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), bottomLeftTabWidget,
-          SLOT(setDisabled(bool)));
-  connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), bottomRightGroupBox,
-          SLOT(setDisabled(bool)));
-  //! [2]
+    //! [1]
+    connect(styleComboBox, SIGNAL(activated(QString)),
+            //! [1] //! [2]
+            this, SLOT(changeStyle(QString)));
+    connect(useStylePaletteCheckBox, SIGNAL(toggled(bool)), this, SLOT(changePalette()));
+    connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), topLeftGroupBox,
+            SLOT(setDisabled(bool)));
+    connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), topRightGroupBox,
+            SLOT(setDisabled(bool)));
+    connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), bottomLeftTabWidget,
+            SLOT(setDisabled(bool)));
+    connect(disableWidgetsCheckBox, SIGNAL(toggled(bool)), bottomRightGroupBox,
+            SLOT(setDisabled(bool)));
+    //! [2]
 
-  //! [3]
-  QHBoxLayout* topLayout = new QHBoxLayout;
-  //! [3] //! [4]
-  topLayout->addWidget(styleLabel);
-  topLayout->addWidget(styleComboBox);
-  topLayout->addStretch(1);
-  topLayout->addWidget(useStylePaletteCheckBox);
-  topLayout->addWidget(disableWidgetsCheckBox);
+    //! [3]
+    QHBoxLayout *topLayout = new QHBoxLayout;
+    //! [3] //! [4]
+    topLayout->addWidget(styleLabel);
+    topLayout->addWidget(styleComboBox);
+    topLayout->addStretch(1);
+    topLayout->addWidget(useStylePaletteCheckBox);
+    topLayout->addWidget(disableWidgetsCheckBox);
 
-  QGridLayout* mainLayout = new QGridLayout;
-  mainLayout->addLayout(topLayout, 0, 0, 1, 2);
-  mainLayout->addWidget(topLeftGroupBox, 1, 0);
-  mainLayout->addWidget(topRightGroupBox, 1, 1);
-  mainLayout->addWidget(bottomLeftTabWidget, 2, 0);
-  mainLayout->addWidget(bottomRightGroupBox, 2, 1);
-  mainLayout->addWidget(progressBar, 3, 0, 1, 2);
-  mainLayout->setRowStretch(1, 1);
-  mainLayout->setRowStretch(2, 1);
-  mainLayout->setColumnStretch(0, 1);
-  mainLayout->setColumnStretch(1, 1);
-  setLayout(mainLayout);
+    QGridLayout *mainLayout = new QGridLayout;
+    mainLayout->addLayout(topLayout, 0, 0, 1, 2);
+    mainLayout->addWidget(topLeftGroupBox, 1, 0);
+    mainLayout->addWidget(topRightGroupBox, 1, 1);
+    mainLayout->addWidget(bottomLeftTabWidget, 2, 0);
+    mainLayout->addWidget(bottomRightGroupBox, 2, 1);
+    mainLayout->addWidget(progressBar, 3, 0, 1, 2);
+    mainLayout->setRowStretch(1, 1);
+    mainLayout->setRowStretch(2, 1);
+    mainLayout->setColumnStretch(0, 1);
+    mainLayout->setColumnStretch(1, 1);
+    setLayout(mainLayout);
 
-  setWindowTitle(tr("Styles"));
-  // changeStyle("Phantom");
+    setWindowTitle(tr("Styles"));
+    // changeStyle("Phantom");
 }
 //! [4]
 
 //! [5]
-void WidgetGallery::changeStyle(const QString& styleName)
+void WidgetGallery::changeStyle(const QString &styleName)
 //! [5] //! [6]
 {
-  if (styleName == "Phantom") {
-    QApplication::setStyle(new QWin11PhantomStyle);
-  } else if (styleName == "Common") {
-    QApplication::setStyle(new QCommonStyle);
-  } else {
-    QApplication::setStyle(QStyleFactory::create(styleName));
-  }
-  changePalette();
+    if (styleName == "Phantom") {
+        QApplication::setStyle(new QWin11PhantomStyle);
+    } else if (styleName == "Common") {
+        QApplication::setStyle(new QCommonStyle);
+    } else {
+        QApplication::setStyle(QStyleFactory::create(styleName));
+    }
+    changePalette();
 }
 //! [6]
 
@@ -142,10 +142,10 @@ void WidgetGallery::changeStyle(const QString& styleName)
 void WidgetGallery::changePalette()
 //! [7] //! [8]
 {
-  if (useStylePaletteCheckBox->isChecked())
-    QApplication::setPalette(QApplication::style()->standardPalette());
-  else
-    QApplication::setPalette(originalPalette);
+    if (useStylePaletteCheckBox->isChecked())
+        QApplication::setPalette(QApplication::style()->standardPalette());
+    else
+        QApplication::setPalette(originalPalette);
 }
 //! [8]
 
@@ -153,9 +153,9 @@ void WidgetGallery::changePalette()
 void WidgetGallery::advanceProgressBar()
 //! [9] //! [10]
 {
-  // int curVal = progressBar->value();
-  // int maxVal = progressBar->maximum();
-  // progressBar->setValue(curVal + (maxVal - curVal) / 100);
+    // int curVal = progressBar->value();
+    // int maxVal = progressBar->maximum();
+    // progressBar->setValue(curVal + (maxVal - curVal) / 100);
 }
 //! [10]
 
@@ -163,156 +163,158 @@ void WidgetGallery::advanceProgressBar()
 void WidgetGallery::createTopLeftGroupBox()
 //! [11] //! [12]
 {
-  topLeftGroupBox = new QGroupBox(tr("Group 1"));
+    topLeftGroupBox = new QGroupBox(tr("Group 1"));
 
-  radioButton1 = new QRadioButton(tr("Radio button 1"));
-  radioButton2 = new QRadioButton(tr("Radio button 2"));
-  radioButton1->setChecked(true);
+    radioButton1 = new QRadioButton(tr("Radio button 1"));
+    radioButton2 = new QRadioButton(tr("Radio button 2"));
+    radioButton1->setChecked(true);
 
-  checkBox = new QCheckBox(tr("Tri-state check box"));
-  checkBox->setTristate(true);
-  checkBox->setCheckState(Qt::PartiallyChecked);
+    checkBox = new QCheckBox(tr("Tri-state check box"));
+    checkBox->setTristate(true);
+    checkBox->setCheckState(Qt::PartiallyChecked);
 
-  auto cb1 = new QCheckBox(tr("Check box"));
-  cb1->setChecked(true);
+    auto cb1 = new QCheckBox(tr("Check box"));
+    cb1->setChecked(true);
 
-  QVBoxLayout* layout = new QVBoxLayout;
-  layout->addWidget(radioButton1);
-  layout->addWidget(radioButton2);
-  layout->addWidget(checkBox);
-  layout->addWidget(cb1);
-  layout->addStretch(1);
-  topLeftGroupBox->setLayout(layout);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(radioButton1);
+    layout->addWidget(radioButton2);
+    layout->addWidget(checkBox);
+    layout->addWidget(cb1);
+    layout->addStretch(1);
+    topLeftGroupBox->setLayout(layout);
 }
 //! [12]
 
-void WidgetGallery::createTopRightGroupBox() {
-  topRightGroupBox = new QGroupBox(tr("Group 2"));
+void WidgetGallery::createTopRightGroupBox()
+{
+    topRightGroupBox = new QGroupBox(tr("Group 2"));
 
-  auto normalPushButton = new QPushButton(tr("Normal Push Button"));
+    auto normalPushButton = new QPushButton(tr("Normal Push Button"));
 
-  defaultPushButton = new QPushButton(tr("Default Push Button"));
-  defaultPushButton->setDefault(true);
+    defaultPushButton = new QPushButton(tr("Default Push Button"));
+    defaultPushButton->setDefault(true);
 
-  flatPushButton = new QPushButton(tr("Flat Push Button"));
-  flatPushButton->setFlat(true);
+    flatPushButton = new QPushButton(tr("Flat Push Button"));
+    flatPushButton->setFlat(true);
 
-  togglePushButton = new QPushButton(tr("Toggle Push Button"));
-  togglePushButton->setCheckable(true);
-  togglePushButton->setChecked(true);
+    togglePushButton = new QPushButton(tr("Toggle Push Button"));
+    togglePushButton->setCheckable(true);
+    togglePushButton->setChecked(true);
 
-  QVBoxLayout* layout = new QVBoxLayout;
-  layout->addWidget(normalPushButton);
-  layout->addWidget(defaultPushButton);
-  layout->addWidget(flatPushButton);
-  layout->addWidget(togglePushButton);
-  layout->addStretch(1);
-  topRightGroupBox->setLayout(layout);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(normalPushButton);
+    layout->addWidget(defaultPushButton);
+    layout->addWidget(flatPushButton);
+    layout->addWidget(togglePushButton);
+    layout->addStretch(1);
+    topRightGroupBox->setLayout(layout);
 }
 
-void WidgetGallery::createBottomLeftTabWidget() {
-  bottomLeftTabWidget = new QTabWidget;
-  bottomLeftTabWidget->setSizePolicy(QSizePolicy::Preferred,
-                                     QSizePolicy::Ignored);
+void WidgetGallery::createBottomLeftTabWidget()
+{
+    bottomLeftTabWidget = new QTabWidget;
+    bottomLeftTabWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 
-  QWidget* tab1 = new QWidget;
-  tableWidget = new QTableWidget(10, 10);
-  tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
-  tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    QWidget *tab1 = new QWidget;
+    tableWidget = new QTableWidget(10, 10);
+    tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-  QHBoxLayout* tab1hbox = new QHBoxLayout;
-  tab1hbox->setMargin(5);
-  tab1hbox->addWidget(tableWidget);
-  tab1->setLayout(tab1hbox);
+    QHBoxLayout *tab1hbox = new QHBoxLayout;
+    tab1hbox->setMargin(5);
+    tab1hbox->addWidget(tableWidget);
+    tab1->setLayout(tab1hbox);
 
-  QWidget* tab2 = new QWidget;
-  textEdit = new QTextEdit;
+    QWidget *tab2 = new QWidget;
+    textEdit = new QTextEdit;
 
-  textEdit->setPlainText(tr("Twinkle, twinkle, little star,\n"
-                            "How I wonder what you are.\n"
-                            "Up above the world so high,\n"
-                            "Like a diamond in the sky.\n"
-                            "Twinkle, twinkle, little star,\n"
-                            "How I wonder what you are!\n"));
+    textEdit->setPlainText(tr("Twinkle, twinkle, little star,\n"
+                              "How I wonder what you are.\n"
+                              "Up above the world so high,\n"
+                              "Like a diamond in the sky.\n"
+                              "Twinkle, twinkle, little star,\n"
+                              "How I wonder what you are!\n"));
 
-  QHBoxLayout* tab2hbox = new QHBoxLayout;
-  tab2hbox->setMargin(5);
-  tab2hbox->addWidget(textEdit);
-  tab2->setLayout(tab2hbox);
+    QHBoxLayout *tab2hbox = new QHBoxLayout;
+    tab2hbox->setMargin(5);
+    tab2hbox->addWidget(textEdit);
+    tab2->setLayout(tab2hbox);
 
-  bottomLeftTabWidget->addTab(tab1, tr("Table"));
-  bottomLeftTabWidget->addTab(tab2, tr("Text Edit"));
+    bottomLeftTabWidget->addTab(tab1, tr("Table"));
+    bottomLeftTabWidget->addTab(tab2, tr("Text Edit"));
 }
 
-void WidgetGallery::createBottomRightGroupBox() {
-  bottomRightGroupBox = new QGroupBox(tr("Group 3"));
-  bottomRightGroupBox->setCheckable(true);
-  bottomRightGroupBox->setChecked(true);
+void WidgetGallery::createBottomRightGroupBox()
+{
+    bottomRightGroupBox = new QGroupBox(tr("Group 3"));
+    bottomRightGroupBox->setCheckable(true);
+    bottomRightGroupBox->setChecked(true);
 
-  lineEdit = new QLineEdit("s3cRe7");
-  lineEdit->setEchoMode(QLineEdit::Password);
+    lineEdit = new QLineEdit("s3cRe7");
+    lineEdit->setEchoMode(QLineEdit::Password);
 
-  auto normalLineEdit = new QLineEdit("Normal line edit gjpqy Ll1|");
+    auto normalLineEdit = new QLineEdit("Normal line edit gjpqy Ll1|");
 
-  spinBox = new QSpinBox(bottomRightGroupBox);
-  spinBox->setValue(40);
-  spinBox->setMaximum(100);
+    spinBox = new QSpinBox(bottomRightGroupBox);
+    spinBox->setValue(40);
+    spinBox->setMaximum(100);
 
-  dateTimeEdit = new QDateTimeEdit(bottomRightGroupBox);
-  dateTimeEdit->setDateTime(QDateTime::currentDateTime());
+    dateTimeEdit = new QDateTimeEdit(bottomRightGroupBox);
+    dateTimeEdit->setDateTime(QDateTime::currentDateTime());
 
-  slider = new QSlider(Qt::Horizontal, bottomRightGroupBox);
-  slider->setValue(40);
+    slider = new QSlider(Qt::Horizontal, bottomRightGroupBox);
+    slider->setValue(40);
 
-  // dial = new QDial;
-  // dial->setValue(30);
-  // dial->setNotchesVisible(true);
+    // dial = new QDial;
+    // dial->setValue(30);
+    // dial->setNotchesVisible(true);
 
-  auto toolButton = new QToolButton;
-  toolButton->setText("Tool Button");
+    auto toolButton = new QToolButton;
+    toolButton->setText("Tool Button");
 
-  auto autoRaiseToolButton = new QToolButton;
-  autoRaiseToolButton->setText("Auto Raise");
-  autoRaiseToolButton->setAutoRaise(true);
+    auto autoRaiseToolButton = new QToolButton;
+    autoRaiseToolButton->setText("Auto Raise");
+    autoRaiseToolButton->setAutoRaise(true);
 
-  QStyleOption opt;
-  opt.initFrom(this);
-  auto withIcon = new QToolButton;
-  withIcon->setIcon(
-      style()->standardIcon(QStyle::SP_ComputerIcon, &opt, this));
+    QStyleOption opt;
+    opt.initFrom(this);
+    auto withIcon = new QToolButton;
+    withIcon->setIcon(style()->standardIcon(QStyle::SP_ComputerIcon, &opt, this));
 
-  auto hbox = new QHBoxLayout;
-  hbox->addWidget(toolButton);
-  hbox->addWidget(autoRaiseToolButton);
-  hbox->addWidget(withIcon);
-  hbox->addStretch(1);
+    auto hbox = new QHBoxLayout;
+    hbox->addWidget(toolButton);
+    hbox->addWidget(autoRaiseToolButton);
+    hbox->addWidget(withIcon);
+    hbox->addStretch(1);
 
-  QGridLayout* layout = new QGridLayout;
-  layout->addWidget(lineEdit, 0, 0, 1, 2);
-  layout->addWidget(normalLineEdit, 1, 0, 1, 2);
-  layout->addWidget(spinBox, 2, 0, 1, 2);
-  layout->addWidget(dateTimeEdit, 3, 0, 1, 2);
-  layout->addWidget(slider, 4, 0);
-  // layout->addWidget(dial, 4, 1, 2, 1);
-  layout->addLayout(hbox, 5, 0, 1, 3);
-  layout->setRowStretch(6, 1);
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(lineEdit, 0, 0, 1, 2);
+    layout->addWidget(normalLineEdit, 1, 0, 1, 2);
+    layout->addWidget(spinBox, 2, 0, 1, 2);
+    layout->addWidget(dateTimeEdit, 3, 0, 1, 2);
+    layout->addWidget(slider, 4, 0);
+    // layout->addWidget(dial, 4, 1, 2, 1);
+    layout->addLayout(hbox, 5, 0, 1, 3);
+    layout->setRowStretch(6, 1);
 
-  // layout->setContentsMargins(0, 0, 0, 0);
-  // bottomRightGroupBox->setFlat(true);
-  bottomRightGroupBox->setLayout(layout);
+    // layout->setContentsMargins(0, 0, 0, 0);
+    // bottomRightGroupBox->setFlat(true);
+    bottomRightGroupBox->setLayout(layout);
 
-  connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this,
-          [this](int val) { progressBar->setValue(val); });
+    connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [this](int val) { progressBar->setValue(val); });
 }
 
 //! [13]
-void WidgetGallery::createProgressBar() {
-  progressBar = new QProgressBar;
-  progressBar->setRange(0, 100);
-  progressBar->setValue(40);
+void WidgetGallery::createProgressBar()
+{
+    progressBar = new QProgressBar;
+    progressBar->setRange(0, 100);
+    progressBar->setValue(40);
 
-  QTimer* timer = new QTimer(this);
-  connect(timer, SIGNAL(timeout()), this, SLOT(advanceProgressBar()));
-  timer->start(1000);
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(advanceProgressBar()));
+    timer->start(1000);
 }
 //! [13]

@@ -21,47 +21,48 @@ class QTableWidget;
 class QTextEdit;
 QT_END_NAMESPACE
 
-class WidgetGallery : public QWidget {
-  Q_OBJECT
+class WidgetGallery : public QWidget
+{
+    Q_OBJECT
 
 public:
-  WidgetGallery(QWidget* parent = nullptr);
+    WidgetGallery(QWidget *parent = nullptr);
 
 private slots:
-  void changeStyle(const QString& styleName);
-  void changePalette();
-  void advanceProgressBar();
+    void changeStyle(const QString &styleName);
+    void changePalette();
+    void advanceProgressBar();
 
 private:
-  void createTopLeftGroupBox();
-  void createTopRightGroupBox();
-  void createBottomLeftTabWidget();
-  void createBottomRightGroupBox();
-  void createProgressBar();
+    void createTopLeftGroupBox();
+    void createTopRightGroupBox();
+    void createBottomLeftTabWidget();
+    void createBottomRightGroupBox();
+    void createProgressBar();
 
-  QPalette originalPalette;
+    QPalette originalPalette;
 
-  QLabel* styleLabel;
-  QComboBox* styleComboBox;
-  QCheckBox* useStylePaletteCheckBox;
-  QCheckBox* disableWidgetsCheckBox;
-  QGroupBox* topLeftGroupBox;
-  QRadioButton* radioButton1;
-  QRadioButton* radioButton2;
-  QRadioButton* radioButton3;
-  QCheckBox* checkBox;
-  QGroupBox* topRightGroupBox;
-  QPushButton* defaultPushButton;
-  QPushButton* togglePushButton;
-  QPushButton* flatPushButton;
-  QTabWidget* bottomLeftTabWidget;
-  QTableWidget* tableWidget;
-  QTextEdit* textEdit;
-  QGroupBox* bottomRightGroupBox;
-  QLineEdit* lineEdit;
-  QSpinBox* spinBox;
-  QDateTimeEdit* dateTimeEdit;
-  QSlider* slider;
-  QDial* dial;
-  QProgressBar* progressBar;
+    QLabel *styleLabel;
+    QComboBox *styleComboBox;
+    QCheckBox *useStylePaletteCheckBox;
+    QCheckBox *disableWidgetsCheckBox;
+    QGroupBox *topLeftGroupBox;
+    QRadioButton *radioButton1;
+    QRadioButton *radioButton2;
+    QRadioButton *radioButton3;
+    QCheckBox *checkBox;
+    QGroupBox *topRightGroupBox;
+    QPushButton *defaultPushButton;
+    QPushButton *togglePushButton;
+    QPushButton *flatPushButton;
+    QTabWidget *bottomLeftTabWidget;
+    QTableWidget *tableWidget;
+    QTextEdit *textEdit;
+    QGroupBox *bottomRightGroupBox;
+    QLineEdit *lineEdit;
+    QSpinBox *spinBox;
+    QDateTimeEdit *dateTimeEdit;
+    QSlider *slider;
+    QDial *dial;
+    QProgressBar *progressBar;
 };

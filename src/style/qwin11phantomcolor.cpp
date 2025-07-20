@@ -371,58 +371,63 @@ rgb2hsluv(double r, double g, double b, double* ph, double* ps, double* pl)
 } // namespace
 } // namespace QWin11Phantom
 
-
 // The code below is for Phantom, and is used for the Rgb/Hsl-based interface
 // for color operations.
 namespace QWin11Phantom {
 namespace {
 // Note: these constants might be out of range when qreal is defined as float
 // instead of double.
-inline qreal linear_of_srgb(qreal x) {
-  return x < 0.0404482362771082 ? x / 12.92
-                                : std::pow((x + 0.055) / 1.055, 2.4f);
+inline qreal linear_of_srgb(qreal x)
+{
+    return x < 0.0404482362771082 ? x / 12.92 : std::pow((x + 0.055) / 1.055, 2.4f);
 }
-inline qreal srgb_of_linear(qreal x) {
-  return x < 0.00313066844250063 ? x * 12.92
-                                 : std::pow(x, 1.0 / 2.4) * 1.055 - 0.055;
+inline qreal srgb_of_linear(qreal x)
+{
+    return x < 0.00313066844250063 ? x * 12.92 : std::pow(x, 1.0 / 2.4) * 1.055 - 0.055;
 }
 } // namespace
-Rgb rgb_of_qcolor(const QColor& color) {
-  Rgb a;
-  a.r = linear_of_srgb((qreal)color.red() / 255.0);
-  a.g = linear_of_srgb((qreal)color.green() / 255.0);
-  a.b = linear_of_srgb((qreal)color.blue() / 255.0);
-  return a;
+Rgb rgb_of_qcolor(const QColor &color)
+{
+    Rgb a;
+    a.r = linear_of_srgb((qreal)color.red() / 255.0);
+    a.g = linear_of_srgb((qreal)color.green() / 255.0);
+    a.b = linear_of_srgb((qreal)color.blue() / 255.0);
+    return a;
 }
-Hsl hsl_of_rgb(qreal r, qreal g, qreal b) {
-  double h, s, l;
-  rgb2hsluv((double)r, (double)g, (double)b, &h, &s, &l);
-  s /= 100.0;
-  l /= 100.0;
-  return Hsl((qreal)h, (qreal)s, (qreal)l);
+Hsl hsl_of_rgb(qreal r, qreal g, qreal b)
+{
+    double h, s, l;
+    rgb2hsluv((double)r, (double)g, (double)b, &h, &s, &l);
+    s /= 100.0;
+    l /= 100.0;
+    return Hsl((qreal)h, (qreal)s, (qreal)l);
 }
-Rgb rgb_of_hsl(qreal h, qreal s, qreal l) {
-  double r, g, b;
-  hsluv2rgb(h, s * 100.0, l * 100.0, &r, &g, &b);
-  return Rgb((qreal)r, (qreal)g, (qreal)b);
+Rgb rgb_of_hsl(qreal h, qreal s, qreal l)
+{
+    double r, g, b;
+    hsluv2rgb(h, s * 100.0, l * 100.0, &r, &g, &b);
+    return Rgb((qreal)r, (qreal)g, (qreal)b);
 }
-QColor qcolor_of_rgb(qreal r, qreal g, qreal b) {
-  int r_ = (int)std::lround(srgb_of_linear(r) * 255.0);
-  int g_ = (int)std::lround(srgb_of_linear(g) * 255.0);
-  int b_ = (int)std::lround(srgb_of_linear(b) * 255.0);
-  return QColor(r_, g_, b_);
+QColor qcolor_of_rgb(qreal r, qreal g, qreal b)
+{
+    int r_ = (int)std::lround(srgb_of_linear(r) * 255.0);
+    int g_ = (int)std::lround(srgb_of_linear(g) * 255.0);
+    int b_ = (int)std::lround(srgb_of_linear(b) * 255.0);
+    return QColor(r_, g_, b_);
 }
-QColor lerpQColor(const QColor& x, const QColor& y, qreal a) {
-  Rgb x_ = rgb_of_qcolor(x);
-  Rgb y_ = rgb_of_qcolor(y);
-  Rgb z = Rgb::lerp(x_, y_, a);
-  return qcolor_of_rgb(z.r, z.g, z.b);
+QColor lerpQColor(const QColor &x, const QColor &y, qreal a)
+{
+    Rgb x_ = rgb_of_qcolor(x);
+    Rgb y_ = rgb_of_qcolor(y);
+    Rgb z = Rgb::lerp(x_, y_, a);
+    return qcolor_of_rgb(z.r, z.g, z.b);
 }
-Rgb Rgb::lerp(const Rgb& x, const Rgb& y, qreal a) {
-  Rgb z;
-  z.r = (1.0 - a) * x.r + a * y.r;
-  z.g = (1.0 - a) * x.g + a * y.g;
-  z.b = (1.0 - a) * x.b + a * y.b;
-  return z;
+Rgb Rgb::lerp(const Rgb &x, const Rgb &y, qreal a)
+{
+    Rgb z;
+    z.r = (1.0 - a) * x.r + a * y.r;
+    z.g = (1.0 - a) * x.g + a * y.g;
+    z.b = (1.0 - a) * x.b + a * y.b;
+    return z;
 }
 } // namespace QWin11Phantom
