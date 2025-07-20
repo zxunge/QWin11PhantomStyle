@@ -28,10 +28,7 @@ A style plugin is available: [qwin11phantomstyleplugin.pro](src/styleplugin/qwin
 
 ## Compatibility
 
-Tested on Qt 5.15 and later, but should work on earlier versions as well. Builds
-with MSVC (tested with 2017), GCC and clang.
-
-Uses `auto` from C++11, so C++11 is needed. C++14 and later are not needed.
+Qt >= 6.4 is needed.
 
 ## License
 
