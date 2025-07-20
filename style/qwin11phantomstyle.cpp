@@ -6,6 +6,7 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/qstring.h>
+#include <QtCore/qstringview.h>
 #include <QtGui/qfont.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qpainterpath.h>
@@ -519,7 +520,7 @@ deep_getCachedSwatchOfQPalette(PhSwatchCache *cache,
             ptr.detach();
         }
         ptr->loadFromQPalette(qpalette);
-        cache->prepend(PhCacheEntry(key, ptr));
+        cache->insert(cache->cbegin(), PhCacheEntry(key, ptr));
         return ptr;
     } else {
         if (idx == 0) {
@@ -530,7 +531,7 @@ deep_getCachedSwatchOfQPalette(PhSwatchCache *cache,
         // want to depend on algorithm or write this myself. Small N with a movable
         // type means it doesn't really matter in this case.
         cache->remove(idx);
-        cache->prepend(e);
+        cache->insert(cache->cbegin(), e);
         return e.second;
     }
 }
@@ -769,7 +770,7 @@ QRect menuItemMnemonicRect(const MenuItemMetrics &metrics, Qt::LayoutDirection d
 
 QRect progressBarRect(const QStyleOptionProgressBar *bar)
 {
-    bool isHorizontal = bar->orientation != Qt::Vertical;
+    bool isHorizontal = !bar->bottomToTop;
     QSize size = bar->rect.size();
 
     /* Make the progessbar width to be no bigger rthen 6 */
@@ -791,7 +792,7 @@ void progressBarFillRects(const QStyleOptionProgressBar *bar,
                           // Whether or not the progress bar is indeterminate
                           bool &outIsIndeterminate)
 {
-    bool isHorizontal = bar->orientation != Qt::Vertical;
+    bool isHorizontal = !bar->bottomToTop;
     QRect ra = progressBarRect(bar);
     QRect rb = ra;
     bool isInverted = bar->invertedAppearance;
@@ -2071,7 +2072,7 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
         QColor dimHighlight(qMin(highlight.red() / 2 + 110, 255),
                             qMin(highlight.green() / 2 + 110, 255),
                             qMin(highlight.blue() / 2 + 110, 255));
-        dimHighlight.setAlpha(widget && widget->isTopLevel() ? 255 : 80);
+        dimHighlight.setAlpha(widget && widget->isWindow() ? 255 : 80);
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->translate(0.5, 0.5);
         painter->setBrush(dimHighlight);
@@ -2274,7 +2275,7 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
         if (!header->icon.isNull()) {
             int iconExtent = qMin(qMin(rect.height(), rect.width()), option->fontMetrics.height());
             auto window = widget ? widget->window()->windowHandle() : nullptr;
-            QPixmap pixmap = header->icon.pixmap(window, QSize(iconExtent, iconExtent),
+            QPixmap pixmap = header->icon.pixmap(QSize(iconExtent, iconExtent), 1.0,
                                                  (header->state & State_Enabled) ? QIcon::Normal
                                                                                  : QIcon::Disabled);
             int pixw = (int)((qreal)pixmap.width() / pixmap.devicePixelRatio());
@@ -2381,7 +2382,7 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
         QRect r = bar->rect.adjusted(2, 2, -2, -2);
         if (r.isEmpty() || !r.isValid())
             break;
-        QSize textSize = option->fontMetrics.size(Qt::TextBypassShaping, bar->text);
+        QSize textSize = option->fontMetrics.size(Qt::TextSingleLine, bar->text);
         QRect textRect =
                 QStyle::alignedRect(option->direction, Qt::AlignCenter, textSize, option->rect);
         textRect &= r;
@@ -2549,7 +2550,7 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
             }
 #  endif
             QWindow *window = widget ? widget->windowHandle() : nullptr;
-            QPixmap pixmap = menuItem->icon.pixmap(window, iconSize, mode, state);
+            QPixmap pixmap = menuItem->icon.pixmap(iconSize, 1.0, mode, state);
             const int pixw = (int)(pixmap.width() / pixmap.devicePixelRatio());
             const int pixh = (int)(pixmap.height() / pixmap.devicePixelRatio());
             QRect pixmapRect = QStyle::alignedRect(option->direction, Qt::AlignCenter,
@@ -2558,10 +2559,10 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
         }
 
         // Draw main text and mnemonic text
-        QStringRef s(&menuItem->text);
+        QStringView s(menuItem->text);
         if (!s.isEmpty()) {
             QRect textRect = Ph::menuItemTextRect(metrics, option->direction, itemRect, hasSubMenu,
-                                                  hasIcon, menuItem->tabWidth);
+                                                  hasIcon, menuItem->reservedShortcutWidth);
             int t = s.indexOf(QLatin1Char('\t'));
             int text_flags = Qt::AlignLeft | Qt::AlignTop | Qt::TextShowMnemonic | Qt::TextDontClip
                     | Qt::TextSingleLine;
@@ -2632,15 +2633,16 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
 
             // Draw mnemonic text
             if (t >= 0) {
-                QRect mnemonicR = Ph::menuItemMnemonicRect(metrics, option->direction, itemRect,
-                                                           hasSubMenu, menuItem->tabWidth);
-                const QStringRef textToDrawRef = s.mid(t + 1);
+                QRect mnemonicR =
+                        Ph::menuItemMnemonicRect(metrics, option->direction, itemRect, hasSubMenu,
+                                                 menuItem->reservedShortcutWidth);
+                const QStringView textToDrawRef = s.mid(t + 1);
                 const QString unsafeTextToDraw =
                         QString::fromRawData(textToDrawRef.constData(), textToDrawRef.size());
                 painter->drawText(mnemonicR, text_flags, unsafeTextToDraw);
                 s = s.left(t);
             }
-            const QStringRef textToDrawRef = s.left(t);
+            const QStringView textToDrawRef = s.left(t);
             const QString unsafeTextToDraw =
                     QString::fromRawData(textToDrawRef.constData(), textToDrawRef.size());
             painter->drawText(textRect, text_flags, unsafeTextToDraw);
@@ -2703,7 +2705,7 @@ void QWin11PhantomStyle::drawControl(ControlElement element, const QStyleOption 
             QIcon::Mode mode = button->state & State_Enabled ? QIcon::Normal : QIcon::Disabled;
             QIcon::State state = button->state & State_On ? QIcon::On : QIcon::Off;
             auto window = widget ? widget->window()->windowHandle() : nullptr;
-            QPixmap pixmap = button->icon.pixmap(window, button->iconSize, mode, state);
+            QPixmap pixmap = button->icon.pixmap(button->iconSize, 1.0, mode, state);
             int pixmapWidth = (int)((qreal)pixmap.width() / pixmap.devicePixelRatio());
             int pixmapHeight = (int)((qreal)pixmap.height() / pixmap.devicePixelRatio());
             int labelWidth = pixmapWidth;
@@ -3673,7 +3675,6 @@ int QWin11PhantomStyle::pixelMetric(PixelMetric metric, const QStyleOption *opti
     case PM_MessageBoxIconSize:
         val = 48;
         break;
-    case PM_DialogButtonsSeparator:
     case PM_ScrollBarSliderMin:
         val = 26;
         break;
@@ -4018,7 +4019,7 @@ QSize QWin11PhantomStyle::sizeFromContents(ContentsType type, const QStyleOption
         bool nullIcon = hdr->icon.isNull();
         int margin = proxy()->pixelMetric(QStyle::PM_HeaderMargin, hdr, widget);
         int iconSize = nullIcon ? 0 : option->fontMetrics.height();
-        QSize txt = hdr->fontMetrics.size(Qt::TextSingleLine | Qt::TextBypassShaping, hdr->text);
+        QSize txt = hdr->fontMetrics.size(Qt::TextSingleLine, hdr->text);
         QSize sz;
         sz.setHeight(margin + qMax(iconSize, txt.height()) + margin);
         sz.setWidth((nullIcon ? 0 : margin) + iconSize + (hdr->text.isNull() ? 0 : margin)

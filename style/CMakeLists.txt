@@ -7,7 +7,10 @@ qt_add_library(QWin11PhantomStyle STATIC
 )
 
 set_target_properties(QWin11PhantomStyle PROPERTIES OUTPUT_NAME qwin11phantomstyle)
-target_include_directories(QWin11PhantomStyle PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(QWin11PhantomStyle
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
 target_link_libraries(QWin11PhantomStyle PRIVATE
     Qt::Core
     Qt::Widgets
