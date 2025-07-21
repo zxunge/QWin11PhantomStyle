@@ -1,5 +1,6 @@
 #ifndef PHANTOMCOLOR_H
 #define PHANTOMCOLOR_H
+
 #include <QtGui/qcolor.h>
 
 namespace QWin11Phantom {

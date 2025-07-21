@@ -1,6 +1,9 @@
 #ifndef PHANTOMSTYLE_H
 #define PHANTOMSTYLE_H
+
 #include <QtWidgets/qcommonstyle.h>
+#include <qicon.h>
+#include <qpalette.h>
 
 class QWin11PhantomStylePrivate;
 class QWin11PhantomStyle : public QCommonStyle

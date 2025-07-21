@@ -28,7 +28,7 @@ A style plugin is available: [qwin11phantomstyleplugin.pro](src/styleplugin/qwin
 
 ## Compatibility
 
-Qt >= 6.4 is needed.
+Qt >= 5.15 is needed.
 
 ## License
 

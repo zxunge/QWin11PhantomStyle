@@ -1,7 +1,7 @@
 #include "qwin11phantomcolor.h"
+
 #include <cmath>
-#include <float.h>
-#include <math.h>
+#include <cfloat>
 
 /*
  * HSLuv-C: Human-friendly HSL
