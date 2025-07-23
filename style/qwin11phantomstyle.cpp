@@ -451,7 +451,7 @@ quint64 fastfragile_hash_qpalette(const QPalette &p)
     // next guaranteed big breaking change for Qt. A warning will hopefully get
     // someone to double-check it at some point in the future.
 #  ifdef _MSC_VER
-#    pragma NOTE(warning "Verify contents and layout of QPalette::cacheKey() have not changed.")
+#    pragma message("Verify contents and layout of QPalette::cacheKey() have not changed.")
 #  else
 #    warning "Verify contents and layout of QPalette::cacheKey() have not changed."
 #  endif
